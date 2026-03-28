@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Editor</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/theme/material-darker.min.css"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      body {
+        margin: 0;
+        background: #121212;
+        color: #f4f4f4;
+        font-family: Inter, system-ui, -apple-system, sans-serif;
+      }
+
+      #app {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        height: 100vh;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.7rem 1rem;
+        border-bottom: 1px solid #303030;
+      }
+
+      #filename {
+        font-size: 0.9rem;
+        opacity: 0.75;
+      }
+
+      #editor-root,
+      .CodeMirror {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app">
+      <header>
+        <strong>Simple Editor (V0)</strong>
+        <span id="filename">Nenhum arquivo aberto</span>
+      </header>
+      <section id="editor-root"></section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/clike/clike.min.js"></script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
