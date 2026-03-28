@@ -12,14 +12,14 @@ Este repositório segue o PRD em `prd.md` e prioriza evolução incremental por 
    - Evitar adicionar funcionalidades fora do roadmap ativo.
 3. **Fluxo obrigatório de release ao final de cada entrega**.
    - Toda implementação finalizada deve terminar com uma release Git.
-   - A publicação oficial deve acontecer via GitHub Actions em `.github/workflows/release.yml`.
+   - A publicação oficial acontece via GitHub Actions em `.github/workflows/release.yml`.
+   - Todo merge para `main` deve disparar build e publicação de release automaticamente.
    - A release deve conter os binários compilados da versão para Linux, macOS e Windows.
-   - Nome sugerido de tag: `vMAJOR.MINOR.PATCH`.
 4. **Checklist mínimo antes de finalizar**.
    - Código atualizado.
    - `STATUS.md` atualizado.
    - Commit realizado.
-   - Tag de versão criada (ex.: `v0.1.0`) para disparar a pipeline de release.
+   - PR pronto para merge em `main` (o merge dispara a release).
 
 ## Convenções rápidas
 - Manter frontend em `frontend/`.

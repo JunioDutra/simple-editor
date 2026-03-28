@@ -3,16 +3,35 @@ name: Build and Release Binaries
 on:
   workflow_dispatch:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
+  meta:
+    name: Release metadata
+    runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.vars.outputs.release_tag }}
+      release_name: ${{ steps.vars.outputs.release_name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute release tag
+        id: vars
+        run: |
+          SHORT_SHA="$(git rev-parse --short HEAD)"
+          DATE_TAG="$(date -u +'%Y%m%d-%H%M')"
+          echo "release_tag=main-${DATE_TAG}-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          echo "release_name=Main build ${DATE_TAG} (${SHORT_SHA})" >> "$GITHUB_OUTPUT"
+
   build:
     name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    needs: meta
     strategy:
       fail-fast: false
       matrix:
@@ -72,7 +91,7 @@ jobs:
 
   release:
     name: Publish GitHub Release
-    needs: build
+    needs: [meta, build]
     runs-on: ubuntu-latest
 
     steps:
@@ -84,6 +103,8 @@ jobs:
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.meta.outputs.release_tag }}
+          name: ${{ needs.meta.outputs.release_name }}
           files: |
             dist/**/simple-editor-*
           generate_release_notes: true

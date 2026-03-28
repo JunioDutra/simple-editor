@@ -11,7 +11,8 @@
 - [ ] Execução ponta-a-ponta validada em ambiente com dependências de build disponíveis
 
 ### Infra/Entrega
-- [x] Pipeline GitHub Actions para build/release dos binários por tag (`v*`)
+- [x] Pipeline GitHub Actions para build/release dos binários
+- [x] Trigger automático de release a cada merge/push na `main`
 - [x] Publicação automática de GitHub Release com artefatos Linux/macOS/Windows
 
 ### V1 — Navegação básica (filesystem)
