@@ -49,10 +49,17 @@ fn resolve_initial_file() -> Option<String> {
     }
 
     let current_dir = std::env::current_dir().ok();
+    let project_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .map(|path| path.to_path_buf());
 
     candidates
         .into_iter()
         .filter_map(|path| {
+            if path.is_absolute() && path.is_file() {
+                return Some(path);
+            }
+
             if path.is_file() {
                 return Some(path);
             }
@@ -61,6 +68,12 @@ fn resolve_initial_file() -> Option<String> {
                 .as_ref()
                 .map(|dir| dir.join(&path))
                 .filter(|joined| joined.is_file())
+                .or_else(|| {
+                    project_root
+                        .as_ref()
+                        .map(|dir| dir.join(&path))
+                        .filter(|joined| joined.is_file())
+                })
         })
         .find_map(|path| {
             std::fs::canonicalize(path)

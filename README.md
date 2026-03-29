@@ -34,7 +34,8 @@ cd simple-editor
 
 ### Executar em modo dev
 ```bash
-cargo tauri dev --manifest-path src-tauri/Cargo.toml -- ./caminho/para/arquivo.java
+python3 scripts/generate_tauri_icons.py
+cargo tauri dev -- ./caminho/para/arquivo.java
 ```
 
 > Dica: no Windows, você pode usar caminho relativo ou absoluto para o arquivo inicial.
@@ -63,3 +64,5 @@ Se o arquivo for aberto corretamente, o caminho aparece no canto superior direit
 - **V5**: IA em background
 
 Consulte `STATUS.md` para o progresso atualizado.
+
+### salvo com meu editor
