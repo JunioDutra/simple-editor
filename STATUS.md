@@ -6,9 +6,13 @@
 - [x] Estrutura inicial frontend/backend criada
 - [x] Backend com leitura/escrita de arquivo (`read_file`/`write_file`)
 - [x] Captura de arquivo inicial por argumento de CLI
+- [x] Correção da resolução de argumento de arquivo inicial no Windows (`daemon.exe caminho\arquivo`)
 - [x] Editor CodeMirror renderizando
 - [x] Interceptação de `Ctrl/Cmd+S`
 - [ ] Execução ponta-a-ponta validada em ambiente com dependências de build disponíveis
+
+### Documentação
+- [x] README na raiz com instruções para baixar e usar
 
 ### Infra/Entrega
 - [x] Pipeline GitHub Actions para build/release dos binários

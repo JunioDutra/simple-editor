@@ -3,7 +3,7 @@ mod commands {
     pub mod write_file;
 }
 
-use std::sync::Mutex;
+use std::{path::PathBuf, sync::Mutex};
 
 #[derive(Default)]
 struct AppState {
@@ -12,11 +12,65 @@ struct AppState {
 
 #[tauri::command]
 fn get_current_file(state: tauri::State<'_, AppState>) -> Option<String> {
-    state.current_file.lock().ok().and_then(|value| value.clone())
+    state
+        .current_file
+        .lock()
+        .ok()
+        .and_then(|value| value.clone())
+}
+
+fn resolve_initial_file() -> Option<String> {
+    let args = std::env::args_os().skip(1).collect::<Vec<_>>();
+
+    if args.is_empty() {
+        return None;
+    }
+
+    let mut candidates: Vec<PathBuf> = Vec::new();
+    let mut iter = args.iter().peekable();
+
+    while let Some(arg) = iter.next() {
+        let arg_text = arg.to_string_lossy();
+
+        match arg_text.as_ref() {
+            "--" => {
+                if let Some(next_arg) = iter.next() {
+                    candidates.push(PathBuf::from(next_arg));
+                }
+            }
+            "--file" | "-f" => {
+                if let Some(next_arg) = iter.next() {
+                    candidates.push(PathBuf::from(next_arg));
+                }
+            }
+            value if value.starts_with('-') => {}
+            _ => candidates.push(PathBuf::from(arg)),
+        }
+    }
+
+    let current_dir = std::env::current_dir().ok();
+
+    candidates
+        .into_iter()
+        .filter_map(|path| {
+            if path.is_file() {
+                return Some(path);
+            }
+
+            current_dir
+                .as_ref()
+                .map(|dir| dir.join(&path))
+                .filter(|joined| joined.is_file())
+        })
+        .find_map(|path| {
+            std::fs::canonicalize(path)
+                .ok()
+                .map(|absolute| absolute.to_string_lossy().to_string())
+        })
 }
 
 fn main() {
-    let initial_file = std::env::args().nth(1);
+    let initial_file = resolve_initial_file();
 
     tauri::Builder::default()
         .manage(AppState {
