@@ -20,10 +20,15 @@ async function loadInitialFile() {
     return;
   }
 
-  fileLabel.textContent = currentFile;
-
-  const content = await tauriInvoke('read_file', { path: currentFile });
-  editor.setValue(content);
+  try {
+    const content = await tauriInvoke('read_file', { path: currentFile });
+    fileLabel.textContent = currentFile;
+    editor.setValue(content);
+  } catch (error) {
+    currentFile = null;
+    fileLabel.textContent = 'Falha ao abrir arquivo';
+    console.error('Falha ao abrir arquivo inicial', error);
+  }
 }
 
 async function saveCurrentFile() {
