@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout
@@ -59,6 +59,9 @@ jobs:
         with:
           workspaces: src-tauri
 
+      - name: Generate Tauri icons required by build
+        run: python scripts/generate_tauri_icons.py
+
       - name: Build release binary
         run: cargo build --release
         working-directory: src-tauri
@@ -68,12 +71,6 @@ jobs:
         run: |
           mkdir -p dist
           cp src-tauri/target/release/simple-editor-tauri dist/simple-editor-linux-x64
-
-      - name: Package macOS binary
-        if: matrix.os == 'macos-latest'
-        run: |
-          mkdir -p dist
-          cp src-tauri/target/release/simple-editor-tauri dist/simple-editor-macos-x64
 
       - name: Package Windows binary
         if: matrix.os == 'windows-latest'

@@ -13,7 +13,8 @@
 ### Infra/Entrega
 - [x] Pipeline GitHub Actions para build/release dos binários
 - [x] Trigger automático de release a cada merge/push na `main`
-- [x] Publicação automática de GitHub Release com artefatos Linux/macOS/Windows
+- [x] Publicação automática de GitHub Release com artefatos Linux/Windows
+- [x] Geração de ícones mínimos (`icon.png`/`icon.ico`) automatizada no CI para destravar build Tauri em Linux/Windows
 
 ### V1 — Navegação básica (filesystem)
 - [ ] Detectar diretório do arquivo
