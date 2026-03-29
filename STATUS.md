@@ -15,6 +15,7 @@
 - [x] Trigger automático de release a cada merge/push na `main`
 - [x] Publicação automática de GitHub Release com artefatos Linux/Windows
 - [x] Geração de ícones mínimos (`icon.png`/`icon.ico`) automatizada no CI para destravar build Tauri em Linux/Windows
+- [x] Correção da geração de `icon.png` para formato RGBA compatível com `tauri::generate_context!` no Ubuntu
 
 ### V1 — Navegação básica (filesystem)
 - [ ] Detectar diretório do arquivo
