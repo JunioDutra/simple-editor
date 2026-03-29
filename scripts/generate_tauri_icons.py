@@ -7,17 +7,25 @@ This avoids committing binary files directly while still providing
 
 from __future__ import annotations
 
-import base64
 import struct
+import zlib
 from pathlib import Path
 
 
 def write_png(path: Path) -> None:
-    # 1x1 transparent PNG
-    png_b64 = (
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO7Z2ioAAAAASUVORK5CYII="
-    )
-    path.write_bytes(base64.b64decode(png_b64))
+    # 1x1 transparent RGBA PNG (color type 6), required by tauri-build.
+    # See PNG spec: signature + IHDR + IDAT + IEND.
+    def chunk(chunk_type: bytes, data: bytes) -> bytes:
+        crc = zlib.crc32(chunk_type + data) & 0xFFFFFFFF
+        return struct.pack(">I", len(data)) + chunk_type + data + struct.pack(">I", crc)
+
+    signature = b"\x89PNG\r\n\x1a\n"
+    ihdr = struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 0, 0)  # RGBA
+    raw_scanline = b"\x00" + b"\x00\x00\x00\x00"  # no filter + transparent pixel
+    idat = zlib.compress(raw_scanline)
+
+    png = signature + chunk(b"IHDR", ihdr) + chunk(b"IDAT", idat) + chunk(b"IEND", b"")
+    path.write_bytes(png)
 
 
 def write_ico(path: Path) -> None:
